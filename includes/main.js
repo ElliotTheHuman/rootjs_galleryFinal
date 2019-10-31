@@ -22,20 +22,43 @@ var pictures = [
 function initiateApp() {
   /*advanced: add jquery sortable call here to make the gallery able to be sorted
 		//on change, rebuild the images array into the new order
-	*/
+  */
+
   makeGallery(pictures);
   addModalCloseHandler();
+
+  var gallerySelector = $("#gallery");
+  gallerySelector.sortable({
+    items: "> figure",
+    update: rebuildImageArray
+  });
 }
+
+function rebuildImageArray() {
+  // Set pictures to an empty array
+  pictures = [];
+
+  // Grab the children of #gallery (in their current order) and use them to rebuild the pictures array
+  var galleryChildElements = $("#gallery").children();
+  var imagesUrlSubDirectory = "images/";
+
+  for (
+    var childIndex = 0;
+    childIndex < galleryChildElements.length;
+    childIndex++
+  ) {
+    pictures.push(
+      imagesUrlSubDirectory + galleryChildElements[childIndex].innerText
+    );
+  }
+}
+
 function makeGallery(imageArray) {
   //use loops and jquery dom creation to make the html structure inside the #gallery section
-
   //create a loop to go through the images in the imageArray
   //create the elements needed for each picture, store the elements in variable
-
   //attach a click handler to the figure you create.  call the "displayImage" function.
-
   //append the element to the #gallery section
-
   // side note: make sure to remove the hard coded html in the index.html when you are done!
 
   for (
@@ -44,14 +67,15 @@ function makeGallery(imageArray) {
     imageArrayIndex++
   ) {
     // Creating imageElement (i.e. <figure> and child elements)
-    var imageUrl = imageArray[imageArrayIndex];
+    var imageRelativeUrl = imageArray[imageArrayIndex];
 
     var imageElement = $("<figure>", {
       class: "imageGallery col-xs-12 col-sm-6 col-md-4",
-      style: "background-image:url(" + imageUrl + ");"
+      style: "background-image:url(" + imageRelativeUrl + ");"
     });
 
-    var imageFileName = imageUrl.split("/")[1];
+    var positionOfFileName = 1;
+    var imageFileName = imageRelativeUrl.split("/")[positionOfFileName];
 
     var imageElementCaption = $("<figcaption>", {
       text: imageFileName
@@ -63,7 +87,8 @@ function makeGallery(imageArray) {
     imageElement.click(displayImage);
 
     // append element to the #gallery section
-    $("#gallery").append(imageElement);
+    var gallerySelector = $("#gallery");
+    gallerySelector.append(imageElement);
   }
 }
 
