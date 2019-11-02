@@ -24,6 +24,10 @@ function initiateApp() {
 		//on change, rebuild the images array into the new order
   */
 
+  if (localStorage.pictures) {
+    pictures = localStorage.pictures.split(",");
+  }
+
   makeGallery(pictures);
   addModalCloseHandler();
 
@@ -51,6 +55,9 @@ function rebuildImageArray() {
       imagesUrlSubDirectory + galleryChildElements[childIndex].innerText
     );
   }
+
+  // Passing array to localStorage
+  localStorage.setItem("pictures",pictures);
 }
 
 function makeGallery(imageArray) {
@@ -92,11 +99,13 @@ function makeGallery(imageArray) {
   }
 }
 
+// localstorage
+
 function addModalCloseHandler() {
   //add a click handler to the img element in the image modal.  When the element is clicked, close the modal
   //for more info, check here: https://www.w3schools.com/bootstrap/bootstrap_ref_js_modal.asp
 
-  var modalBodyImageSelector = $(".modal-body img");
+  var modalBodyImageSelector = $(".modal-body > img");
   var modalSelector = $("#galleryModal");
 
   modalBodyImageSelector.click(function() {
